@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us – T-Furniture</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --text: #333;
+      --accent: #5D4037;
+      --highlight: #C6A961;
+      --card: #ffffff;
+      --border: #eee;
+    }
+    body.dark-mode {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --card: #1e1e1e;
+      --border: #333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Georgia', serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .navbar {
+      background: var(--card);
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 2rem; color: var(--accent); font-weight: bold; }
+    .nav-links a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-icons a {
+      margin-left: 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.3rem;
+    }
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      padding: 40px 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .contact-info, .contact-form {
+      flex: 1;
+      min-width: 300px;
+      background: var(--card);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      color: var(--text);
+    }
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+    }
+    .info-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .info-item i {
+      color: var(--highlight);
+      font-size: 1.2rem;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--text);
+      font-family: Georgia;
+    }
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: Georgia;
+      font-weight: bold;
+    }
+    #mapid {
+      height: 300px;
+      margin-top: 30px;
+      border-radius: 10px;
+    }
+    footer {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html" class="logo">T-Furniture</a>
+      <a href="index.html#indoor">Indoor</a>
+      <a href="index.html#outdoor">Outdoor</a>
+    </div>
+    <div class="nav-icons">
+      <a href="index.html#mapid"><i class="fa-solid fa-location-dot"></i></a>
+      <a href="about.html"><i class="fa-solid fa-circle-info"></i></a>
+      <a href="contact.html"><i class="fa-solid fa-phone"></i></a>
+    <a href="reservations.html" title="My Reservations"><i class="fa-solid fa-calendar-check"></i></a>
+      <a href="#" onclick="toggleDarkMode()"><i class="fa-solid fa-moon"></i></a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="contact-info">
+      <h2>Visit Us</h2>
+      <div class="info-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>123 Craft Street, Design District<br>Beirut, Lebanon</div>
+      </div>
+      <div class="info-item">
+        <i class="fa-solid fa-phone"></i>
+        <div>+961 1 123 456</div>
+      </div>
+      <div class="info-item">
+        <i class="fa-solid fa-envelope"></i>
+        <div>hello@t-furniture.com</div>
+      </div>
+      <div class="info-item">
+        <i class="fa-solid fa-clock"></i>
+        <div>Mon–Sat: 10am–7pm<br>Sun: Closed</div>
+      </div>
+      <div id="mapid"></div>
+    </div>
+
+    <div class="contact-form">
+      <h2>Send a Message</h2>
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" class="form-control" placeholder="How can we help?" required></textarea>
+        </div>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 T-Furniture | Crafted with care</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you! We’ll get back to you soon.');
+      this.reset();
+    });
+
+    const map = L.map('mapid').setView([33.36597, 35.43658], 17);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    L.marker([33.36597, 35.43558]).addTo(map)
+      .bindPopup("<b>T-Furniture Showroom</b><br>Visit us today!").openPopup();
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+    });
+  </script>
+</body>
+</html>

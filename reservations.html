@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirm Reservation – T-Furniture</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --text: #333;
+      --accent: #5D4037;
+      --highlight: #C6A961;
+      --card: #ffffff;
+    }
+    body.dark-mode {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --card: #1e1e1e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Georgia; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s;
+    }
+    .navbar {
+      background: var(--card);
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .logo { font-size: 2rem; color: var(--accent); font-weight: bold; }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 30px;
+    }
+    .reservation-item {
+      display: flex;
+      gap: 20px;
+      padding: 15px;
+      background: var(--card);
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+    .reservation-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .item-info h3 { color: var(--accent); margin-bottom: 5px; }
+    .item-info .price { color: var(--highlight); font-weight: bold; }
+    .form-group {
+      margin: 20px 0;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: Georgia;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+    footer {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">T-Furniture</a>
+  </nav>
+
+  <main>
+    <h1>Confirm Your Reservation</h1>
+    
+    <div id="reservationsList"></div>
+
+    <form id="confirmForm" style="margin-top: 30px;">
+      <div class="form-group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" class="form-control" required placeholder="+961 1 123 456">
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="delivery"> I want delivery (free within Beirut)
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="notes">Special Instructions (Optional)</label>
+        <textarea id="notes" class="form-control" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn">Confirm Reservation</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 T-Furniture | Your reservation will be confirmed within 24 hours.</p>
+  </footer>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    function loadReservations() {
+      const list = document.getElementById('reservationsList');
+      const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+
+      if (reservations.length === 0) {
+        list.innerHTML = '<p style="text-align:center; padding:30px;">No items reserved.</p>';
+        document.getElementById('confirmForm').style.display = 'none';
+        return;
+      }
+
+      let html = '';
+      reservations.forEach(r => {
+        html += `
+          <div class="reservation-item">
+            <img src="${r.img}" alt="${r.name}">
+            <div class="item-info">
+              <h3>${r.name}</h3>
+              <div class="price">$${r.price}</div>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    document.getElementById('confirmForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const phone = document.getElementById('phone').value;
+      const delivery = document.getElementById('delivery').checked;
+      const notes = document.getElementById('notes').value;
+
+      // ✅ CLEAR RESERVATIONS AFTER CONFIRMATION
+      localStorage.removeItem('reservations');
+
+      alert(`✅ Reservation confirmed!\nPhone: ${phone}\nDelivery: ${delivery ? 'Yes' : 'No'}\nOur team will contact you within 24 hours.`);
+      
+      // Optional: redirect to homepage
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+      loadReservations();
+    });
+  </script>
+</body>
+</html>

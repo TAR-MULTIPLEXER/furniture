@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Item Details – T-Furniture</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --text: #333;
+      --accent: #5D4037;
+      --highlight: #C6A961;
+      --card: #ffffff;
+    }
+    body.dark-mode {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --card: #1e1e1e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Georgia; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s;
+    }
+    .navbar {
+      background: var(--card);
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+    }
+    .logo { font-size: 2rem; color: var(--accent); font-weight: bold; }
+    main {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    .image { flex: 1; min-width: 300px; }
+    .image img { width: 100%; border-radius: 10px; }
+    .info { flex: 1; min-width: 300px; }
+    h1 { color: var(--accent); margin-bottom: 15px; }
+    .price { color: var(--highlight); font-size: 1.8rem; margin: 15px 0; }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    footer {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+      padding: 25px;
+      margin-top: 50px;
+    }
+   .navbar a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">T-Furniture</a>
+    <a href="reservations.html"><i class="fa-solid fa-calendar-check fa-xl"></i></a>
+  </nav>
+
+  <main>
+    <div class="image">
+      <img id="itemImage" src="" alt="Item">
+    </div>
+    <div class="info">
+      <h1 id="itemName">Loading...</h1>
+      <p id="itemDesc"></p>
+      <div class="price">$<span id="itemPrice"></span></div>
+      <button class="btn" id="reserveBtn">Reserve This Item</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 T-Furniture | Sustainable. Handcrafted. Reserved for you.</p>
+  </footer>
+
+  <script>
+    const products = [
+      { id: 1, name: "Small Desk", price: 125, img: "picture/bg.jpg", desc: "Compact desk for small spaces" },
+      { id: 2, name: "White Salon Table", price: 356, img: "picture/table.jpg", desc: "Elegant white table for living room" },
+      { id: 3, name: "Queen Bed", price: 249, img: "picture/bed.jpg", desc: "Comfortable bed for two" },
+      { id: 4, name: "Grey Sofa", price: 399, img: "picture/sofa.jpg", desc: "Modern grey fabric sofa" },
+      { id: 5, name: "White Sofa", price: 509, img: "picture/sofa2.jpg", desc: "Luxurious white linen sofa" },
+      { id: 6, name: "Outdoor Sofa", price: 700, img: "picture/furniture-outdoor.jpg", desc: "Weather-resistant outdoor sofa" },
+      { id: 7, name: "Camping Table", price: 200, img: "picture/wood-outdoor-furniture.jpg", desc: "Portable wooden table for camping" },
+      { id: 8, name: "Wood Chair", price: 45, img: "picture/chair-out-furniture.jpg", desc: "Simple wooden outdoor chair" }
+    ];
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = parseInt(urlParams.get('id'));
+      const product = products.find(p => p.id === id);
+
+      if (!product) {
+        document.querySelector('main').innerHTML = '<h2 style="text-align:center; margin-top:100px;">Item not found</h2>';
+        return;
+      }
+
+      document.getElementById('itemName').textContent = product.name;
+      document.getElementById('itemDesc').textContent = product.desc;
+      document.getElementById('itemPrice').textContent = product.price;
+      document.getElementById('itemImage').src = product.img;
+
+      document.getElementById('reserveBtn').addEventListener('click', () => {
+        const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+        if (reservations.some(r => r.id === id)) {
+          alert('Already reserved!');
+          return;
+        }
+        reservations.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          img: product.img,
+          date: new Date().toISOString()
+        });
+        localStorage.setItem('reservations', JSON.stringify(reservations));
+        alert('✅ Item reserved! Go to Reservations to confirm.');
+        window.location.href = 'reservations.html';
+      });
+    });
+  </script>
+</body>
+</html>

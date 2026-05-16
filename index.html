@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>T-Furniture – Sustainable Craftsmanship</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    :root {
+      --bg: #faf9f6;
+      --text: #333;
+      --accent: #5D4037;
+      --highlight: #C6A961;
+      --card: #ffffff;
+      --border: #eee;
+    }
+    body.dark-mode {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --card: #1e1e1e;
+      --border: #333;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Georgia', serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    .navbar {
+      background: var(--card);
+      padding: 20px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+    .nav-links a {
+      margin: 0 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+    .nav-icons a {
+      margin-left: 16px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.3rem;
+    }
+    .bottom-categories {
+      padding: 15px 5%;
+      background: var(--card);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .bottom-categories a,
+    .bottom-categories input {
+      padding: 8px 16px;
+      background: #f8f6f2;
+      border: none;
+      border-radius: 30px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .bottom-categories input {
+      width: 220px;
+      font-family: Georgia;
+    }
+    section {
+      padding: 40px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      color: var(--accent);
+      margin-bottom: 30px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 30px;
+      justify-content: center;
+    }
+    .product-card {
+      background: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    .product-card:hover {
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .product-info {
+      padding: 16px;
+    }
+    .product-info h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .price {
+      color: var(--highlight);
+      font-weight: bold;
+      font-size: 1.3rem;
+      margin: 8px 0;
+    }
+    .btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: Georgia;
+      font-size: 0.95rem;
+    }
+    .b6 {
+      text-align: center;
+      padding: 12px;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+      margin: 30px 5%;
+      border-radius: 8px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #mapid {
+      height: 350px;
+      margin: 40px 5%;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    footer {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+      padding: 30px 5%;
+      margin-top: 40px;
+      font-size: 0.95rem;
+    }
+    @media (max-width: 768px) {
+      .navbar, .bottom-categories {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .nav-icons { margin-top: 10px; }
+      .nav-icons a { margin-left: 0; margin-right: 16px; }
+      .container { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html" class="logo">T-Furniture</a>
+      <a href="#indoor">Indoor</a>
+      <a href="#outdoor">Outdoor</a>
+    </div>
+    <div class="nav-icons">
+      <a href="#mapid" title="Location"><i class="fa-solid fa-location-dot"></i></a>
+      <a href="about.html" title="About"><i class="fa-solid fa-circle-info"></i></a>
+      <a href="contact.html" title="Contact"><i class="fa-solid fa-phone"></i></a>
+      <a href="reservations.html" title="My Reservations"><i class="fa-solid fa-calendar-check"></i></a>
+      <a href="#" onclick="toggleDarkMode()" title="Dark mode">
+        <i class="fa-solid fa-moon"></i>
+      </a>
+    </div>
+  </nav>
+
+  <div class="bottom-categories">
+    <a onclick="filterByCategory('all')">All</a>
+    <a onclick="filterByCategory('table')">Table</a>
+    <a onclick="filterByCategory('chair')">Chair</a>
+    <a onclick="filterByCategory('desk')">Desk</a>
+    <a onclick="filterByCategory('sofa')">Sofa</a>
+    <a onclick="filterByCategory('bed')">Bed</a>
+    <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterBySearch()">
+  </div>
+
+  <section id="indoor">
+    <h2>Indoor Collection</h2>
+    <div class="container" id="indoorContainer"></div>
+  </section>
+
+  <div class="b6">–20% on selected indoor pieces</div>
+
+  <section id="outdoor">
+    <h2>Outdoor Living</h2>
+    <div class="container" id="outdoorContainer"></div>
+  </section>
+
+  <div id="mapid"></div>
+
+  <footer>
+    <p>&copy; 2025 T-Furniture</p>
+    <p>
+      Inspired by <strong>BMW’s “Changing Lanes”</strong> podcast on sustainability and innovation, 
+      and by <strong>Audi & Mercedes-Benz</strong>’s vision to 
+      <em>“design the mobility of tomorrow… a future that is digital, sustainable and electric.”</em>
+    </p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    const products = [
+      { id: 1, name: "Small Desk", category: "desk", type: "indoor", price: 125, img: "picture/bg.jpg", desc: "Compact desk for small spaces" },
+      { id: 2, name: "White Salon Table", category: "table", type: "indoor", price: 356, img: "picture/table.jpg", desc: "Elegant white table for living room" },
+      { id: 3, name: "Queen Bed", category: "bed", type: "indoor", price: 249, img: "picture/bed.jpg", desc: "Comfortable bed for two" },
+      { id: 4, name: "Grey Sofa", category: "sofa", type: "indoor", price: 399, img: "picture/sofa.jpg", desc: "Modern grey fabric sofa" },
+      { id: 5, name: "White Sofa", category: "sofa", type: "indoor", price: 509, img: "picture/sofa2.jpg", desc: "Luxurious white linen sofa" },
+      { id: 6, name: "Outdoor Sofa", category: "sofa", type: "outdoor", price: 700, img: "picture/furniture-outdoor.jpg", desc: "Weather-resistant outdoor sofa" },
+      { id: 7, name: "Camping Table", category: "table", type: "outdoor", price: 200, img: "picture/wood-outdoor-furniture.jpg", desc: "Portable wooden table for camping" },
+      { id: 8, name: "Wood Chair", category: "chair", type: "outdoor", price: 45, img: "picture/chair-out-furniture.jpg", desc: "Simple wooden outdoor chair" }
+    ];
+
+    function viewItem(id) {
+      window.location.href = `item-detail.html?id=${id}`;
+    }
+
+    function createProductCard(p) {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${p.img}" alt="${p.name}">
+        <div class="product-info">
+          <h3>${p.name}</h3>
+          <div class="price">$${p.price}</div>
+          <button class="btn" onclick="viewItem(${p.id})">View Item</button>
+        </div>
+      `;
+      return card;
+    }
+
+    function renderAllProducts() {
+      const indoor = document.getElementById('indoorContainer');
+      const outdoor = document.getElementById('outdoorContainer');
+      indoor.innerHTML = '';
+      outdoor.innerHTML = '';
+
+      const indoorItems = products.filter(p => p.type === 'indoor');
+      const outdoorItems = products.filter(p => p.type === 'outdoor');
+
+      indoorItems.forEach(p => indoor.appendChild(createProductCard(p)));
+      outdoorItems.forEach(p => outdoor.appendChild(createProductCard(p)));
+
+      document.getElementById('indoor').style.display = 'block';
+      document.getElementById('outdoor').style.display = 'block';
+    }
+
+    function filterByCategory(cat) {
+      const indoor = document.getElementById('indoorContainer');
+      const outdoor = document.getElementById('outdoorContainer');
+      const indoorSec = document.getElementById('indoor');
+      const outdoorSec = document.getElementById('outdoor');
+
+      indoor.innerHTML = '';
+      outdoor.innerHTML = '';
+
+      const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
+      const indoorItems = filtered.filter(p => p.type === 'indoor');
+      const outdoorItems = filtered.filter(p => p.type === 'outdoor');
+
+      indoorItems.forEach(p => indoor.appendChild(createProductCard(p)));
+      outdoorItems.forEach(p => outdoor.appendChild(createProductCard(p)));
+
+      indoorSec.style.display = indoorItems.length > 0 ? 'block' : 'none';
+      outdoorSec.style.display = outdoorItems.length > 0 ? 'block' : 'none';
+    }
+
+    function filterBySearch() {
+      const term = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (term === '') {
+        renderAllProducts();
+        return;
+      }
+
+      const indoor = document.getElementById('indoorContainer');
+      const outdoor = document.getElementById('outdoorContainer');
+      const indoorSec = document.getElementById('indoor');
+      const outdoorSec = document.getElementById('outdoor');
+
+      indoor.innerHTML = '';
+      outdoor.innerHTML = '';
+
+      const filtered = products.filter(p => 
+        p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term)
+      );
+      const indoorItems = filtered.filter(p => p.type === 'indoor');
+      const outdoorItems = filtered.filter(p => p.type === 'outdoor');
+
+      indoorItems.forEach(p => indoor.appendChild(createProductCard(p)));
+      outdoorItems.forEach(p => outdoor.appendChild(createProductCard(p)));
+
+      indoorSec.style.display = indoorItems.length > 0 ? 'block' : 'none';
+      outdoorSec.style.display = outdoorItems.length > 0 ? 'block' : 'none';
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+      renderAllProducts();
+
+      const map = L.map('mapid').setView([33.36597, 35.43658], 17);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([33.36597, 35.43558]).addTo(map)
+        .bindPopup("<b>T-Furniture Showroom</b><br>Visit us today!").openPopup();
+    });
+  </script>
+</body>
+</html>
